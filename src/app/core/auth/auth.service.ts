@@ -5,6 +5,8 @@ import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { environment } from 'environments/environment';
 import { user } from '../../mock-api/common/user/data';
+import * as shajs from 'sha.js';
+
 import * as CryptoJS from 'crypto-js';
 @Injectable()
 export class AuthService
@@ -74,20 +76,26 @@ export class AuthService
         {
             return throwError('User is already logged in.');
         }
-
-        return this._httpClient.post('api/auth/sign-in', credentials).pipe(
+        credentials.password = shajs('sha256').update(credentials.password ).digest('hex')
+        
+        debugger
+        return this._httpClient.post(environment.apiUrl+'/auth', credentials)
+        .pipe(
             switchMap((response: any) => {
 
                 // Store the access token in the local storage
-                this.accessToken = response.accessToken;
+                    this.accessToken = response.data.value;
 
                 // Set the authenticated flag to true
-                this._authenticated = true;
+                   this._authenticated = true;
 
                 // Store the user on the user service
-                this._userService.user = response.user;
+                 //   this._userService.user = response.user;
+                   this._userService.user = response.data.user;
 
                 // Return a new observable with the response
+             
+
                 return of(response);
             })
         );
