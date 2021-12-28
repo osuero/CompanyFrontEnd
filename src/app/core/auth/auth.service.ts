@@ -6,8 +6,6 @@ import { UserService } from 'app/core/user/user.service';
 import { environment } from 'environments/environment';
 import * as shajs from 'sha.js';
 
-import * as CryptoJS from 'crypto-js';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 @Injectable()
 export class AuthService
 {
@@ -162,8 +160,8 @@ export class AuthService
      */
     signUp(user: { firstName: string; lastName:string, email: string; password: string}): Observable<any>
     {
-            user.password = CryptoJS.AES.encrypt(user.password,'SAT').toString()
-            return this._httpClient.post(environment.apiUrl+'/user', user);
+        user.password = shajs('sha256').update(user.password ).digest('hex')
+        return this._httpClient.post(environment.apiUrl+'/user', user);
     }
 
     /**
