@@ -20,7 +20,7 @@ import { SearchMockApi } from 'app/mock-api/common/search/api';
 import { ScrumboardMockApi } from 'app/mock-api/apps/scrumboard/api';
 import { ShortcutsMockApi } from 'app/mock-api/common/shortcuts/api';
 import { TasksMockApi } from 'app/mock-api/apps/tasks/api';
-import { UserMockApi } from 'app/mock-api/common/user/api';
+//import { UserMockApi } from 'app/mock-api/common/user/api';
 
 export const mockApiServices = [
     AcademyMockApi,
@@ -44,6 +44,6 @@ export const mockApiServices = [
     SearchMockApi,
     ScrumboardMockApi,
     ShortcutsMockApi,
-    TasksMockApi,
-    UserMockApi
+    TasksMockApi
+    //UserMockApi
 ];

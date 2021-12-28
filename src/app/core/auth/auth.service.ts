@@ -4,10 +4,10 @@ import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { environment } from 'environments/environment';
-import { user } from '../../mock-api/common/user/data';
 import * as shajs from 'sha.js';
 
 import * as CryptoJS from 'crypto-js';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 @Injectable()
 export class AuthService
 {
@@ -32,8 +32,18 @@ export class AuthService
      */
     set accessToken(token: string)
     {
-        localStorage.setItem('accessToken', token);
+        if(!localStorage.getItem('accessToken')){
+            localStorage.setItem('accessToken', JSON.stringify(token));
+        }
     }
+
+    set userId(id: string)
+    {
+        if(!localStorage.getItem('userId')){
+            localStorage.setItem('userId', id);
+        }
+    }
+
 
     get accessToken(): string
     {
@@ -77,25 +87,23 @@ export class AuthService
             return throwError('User is already logged in.');
         }
         credentials.password = shajs('sha256').update(credentials.password ).digest('hex')
-        
-        debugger
+
         return this._httpClient.post(environment.apiUrl+'/auth', credentials)
         .pipe(
             switchMap((response: any) => {
 
                 // Store the access token in the local storage
-                    this.accessToken = response.data.value;
+                   this.accessToken = response.data.value;
+                
+                   this.userId = response.data.userId;
 
                 // Set the authenticated flag to true
                    this._authenticated = true;
 
                 // Store the user on the user service
-                 //   this._userService.user = response.user;
                    this._userService.user = response.data.user;
 
                 // Return a new observable with the response
-             
-
                 return of(response);
             })
         );
@@ -139,7 +147,7 @@ export class AuthService
     {
         // Remove the access token from the local storage
         localStorage.removeItem('accessToken');
-
+        localStorage.removeItem('userId');
         // Set the authenticated flag to false
         this._authenticated = false;
 
@@ -155,17 +163,7 @@ export class AuthService
     signUp(user: { firstName: string; lastName:string, email: string; password: string}): Observable<any>
     {
             user.password = CryptoJS.AES.encrypt(user.password,'SAT').toString()
-           debugger
-                return this._httpClient.post(environment.apiUrl+'/user', user);
-        
-    }
-
-
-    async sha256(str): Promise<string> {
-        const encoder = new TextEncoder();
-        const encdata = encoder.encode(str);
-        const buf = await crypto.subtle.digest("SHA-256", encdata);
-        return Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
+            return this._httpClient.post(environment.apiUrl+'/user', user);
     }
 
     /**

@@ -1,9 +1,7 @@
 <div class="fuse-vertical-navigation-wrapper">
 
     <!-- Header -->
-    <div class="fuse-vertical-navigation-header">
-        <ng-content select="[fuseVerticalNavigationHeader]"></ng-content>
-    </div>
+
 
     <!-- Content -->
     <div
@@ -16,7 +14,7 @@
         <div class="fuse-vertical-navigation-content-header">
             <ng-content select="[fuseVerticalNavigationContentHeader]"></ng-content>
         </div>
-
+  
         <!-- Items -->
         <ng-container *ngFor="let item of navigation; trackBy: trackByFn">
 
@@ -36,9 +34,10 @@
 
                 <!-- Basic -->
                 <ng-container *ngIf="item.type === 'basic'">
-                    <fuse-vertical-navigation-basic-item
+                 <fuse-vertical-navigation-basic-item
                         [item]="item"
-                        [name]="name"></fuse-vertical-navigation-basic-item>
+                        [name]="name">
+                    </fuse-vertical-navigation-basic-item>
                 </ng-container>
 
                 <!-- Collapsable -->

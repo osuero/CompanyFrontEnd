@@ -1,55 +1,38 @@
 import { Injectable } from '@angular/core';
 import { assign, cloneDeep } from 'lodash-es';
-import { FuseMockApiService } from '@fuse/lib/mock-api';
-import { user as userData } from 'app/mock-api/common/user/data';
+import { HttpClient } from '@angular/common/http';
+import { User } from 'app/core/user/user.types';
+import { environment } from 'environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserMockApi
 {
-    private _user: any = userData;
-
+    private _user: any;
+    private userId: string;
     /**
      * Constructor
      */
-    constructor(private _fuseMockApiService: FuseMockApiService)
+    constructor(private _httpClient: HttpClient)
     {
-        // Register Mock API handlers
-        this.registerHandlers();
+        this.userId = localStorage.getItem('userId');
+        this.registerUser();
     }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
 
-    /**
-     * Register Mock API handlers
-     */
-    registerHandlers(): void
+    registerUser():void
     {
-        // -----------------------------------------------------------------------------------------------------
-        // @ User - GET
-        // -----------------------------------------------------------------------------------------------------
-        this._fuseMockApiService
-            .onGet('api/common/user')
-            .reply(() => [200, cloneDeep(this._user)]);
-
-        // -----------------------------------------------------------------------------------------------------
-        // @ User - PATCH
-        // -----------------------------------------------------------------------------------------------------
-        this._fuseMockApiService
-            .onPatch('api/common/user')
-            .reply(({request}) => {
-
-                // Get the user mock-api
-                const user = cloneDeep(request.body.user);
-
-                // Update the user mock-api
+        this._httpClient.get<User>(environment.apiUrl+'/user',{ params:{'Id': this.userId} }).subscribe(
+            (x)=>{
+                this._user = x;
+                const user = cloneDeep(x);
                 this._user = assign({}, this._user, user);
-
-                // Return the response
-                return [200, cloneDeep(this._user)];
-            });
+                [200, cloneDeep(this._user)]
+            }
+        )
     }
 }
