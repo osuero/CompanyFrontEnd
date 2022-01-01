@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable, ReplaySubject, tap } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { environment } from 'environments/environment';
+
 @Injectable({
     providedIn: 'root'
 })
@@ -15,7 +16,7 @@ export class UserService
      */
     constructor(private _httpClient: HttpClient)
     {
-        this._userId = localStorage.getItem('userId').trim()
+        this._userId = localStorage.getItem('userId').trim();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -27,15 +28,14 @@ export class UserService
      *
      * @param value
      */
+     get user$(): Observable<User>
+     {
+         return this._user.asObservable();
+     }
     set user(value: User)
     {
         // Store the value
         this._user.next(value);
-    }
-
-    get user$(): Observable<User>
-    {
-        return this._user.asObservable();
     }
 
     // -----------------------------------------------------------------------------------------------------

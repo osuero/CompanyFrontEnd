@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 import { AuthUtils } from 'app/core/auth/auth.utils';
-import { UserService } from 'app/core/user/user.service';
+//import { UserService } from 'app/core/user/user.service';
 import { environment } from 'environments/environment';
 import * as shajs from 'sha.js';
 
@@ -15,10 +15,16 @@ export class AuthService
      * Constructor
      */
     constructor(
-        private _httpClient: HttpClient,
-        private _userService: UserService,
+        private _httpClient: HttpClient
+        //,
+        //private _userService: UserService,
     )
     {
+    }
+
+    get accessToken(): string
+    {
+        return localStorage.getItem('accessToken') ?? '';
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -40,12 +46,6 @@ export class AuthService
         if(!localStorage.getItem('userId')){
             localStorage.setItem('userId', id);
         }
-    }
-
-
-    get accessToken(): string
-    {
-        return localStorage.getItem('accessToken') ?? '';
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ export class AuthService
         {
             return throwError('User is already logged in.');
         }
-        credentials.password = shajs('sha256').update(credentials.password ).digest('hex')
+        credentials.password = shajs('sha256').update(credentials.password ).digest('hex');
 
         return this._httpClient.post(environment.apiUrl+'/auth', credentials)
         .pipe(
@@ -92,14 +92,11 @@ export class AuthService
 
                 // Store the access token in the local storage
                    this.accessToken = response.data.value;
-                
+
                    this.userId = response.data.userId;
 
                 // Set the authenticated flag to true
                    this._authenticated = true;
-
-                // Store the user on the user service
-                   this._userService.user = response.data.user;
 
                 // Return a new observable with the response
                 return of(response);
@@ -129,9 +126,6 @@ export class AuthService
                 // Set the authenticated flag to true
                 this._authenticated = true;
 
-                // Store the user on the user service
-                this._userService.user = response.user;
-
                 // Return true
                 return of(true);
             })
@@ -158,9 +152,9 @@ export class AuthService
      *
      * @param user
      */
-    signUp(user: { firstName: string; lastName:string, email: string; password: string}): Observable<any>
+    signUp(user: { firstName: string; lastName:string; email: string; password: string}): Observable<any>
     {
-        user.password = shajs('sha256').update(user.password ).digest('hex')
+        user.password = shajs('sha256').update(user.password ).digest('hex');
         return this._httpClient.post(environment.apiUrl+'/user', user);
     }
 
