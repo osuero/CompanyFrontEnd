@@ -64,19 +64,6 @@ export const appRoutes: Route[] = [
         ]
     },
 
-    // Admin routes
-    {
-        path       : '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
-        component  : LayoutComponent,
-        resolve    : {
-            initialData: InitialDataResolver,
-        },
-        children   : [
-            {path: 'example', loadChildren: () => import('app/modules/admin/example/example.module').then(m => m.ExampleModule)},
-        ]
-    },
     {
         path       : '',
         canActivate: [AuthGuard],
@@ -88,5 +75,10 @@ export const appRoutes: Route[] = [
         children   : [
             {path: 'suite', loadChildren: () => import('app/modules/suite/suite.module').then(m => m.SuiteModule)},
         ]
-    }
+    },            // Pages
+    {path: 'pages', children: [
+
+        // Settings
+        {path: 'settings', loadChildren: () => import('app/modules/admin/pages/settings/settings.module').then(m => m.SettingsModule)},
+    ]},
 ];
