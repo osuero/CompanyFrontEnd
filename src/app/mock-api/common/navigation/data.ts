@@ -3,10 +3,19 @@ import { FuseNavigationItem } from '@fuse/components/navigation';
 
 export const defaultNavigation: FuseNavigationItem[] = [
     {
-        id   : 'example',
-        title: 'Exampleasssss',
-        type : 'basic',
-        icon : 'heroicons_outline:chart-pie',
-        link : '/example'
+        id      : 'pages',
+        title   : 'Pages',
+        subtitle: 'Custom made page designs',
+        type    : 'group',
+        icon    : 'heroicons_outline:document',
+        children: [
+            {
+                id   : 'pages.settings',
+                title: 'Settings',
+                type : 'basic',
+                icon : 'heroicons_outline:cog',
+                link : '/pages/settings'
+            }
+        ]
     }
 ];
