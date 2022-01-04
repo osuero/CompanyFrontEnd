@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 import { AuthUtils } from 'app/core/auth/auth.utils';
-//import { UserService } from 'app/core/user/user.service';
 import { environment } from 'environments/environment';
 import * as shajs from 'sha.js';
+
 
 @Injectable()
 export class AuthService
@@ -36,6 +36,7 @@ export class AuthService
      */
     set accessToken(token: string)
     {
+
         if(!localStorage.getItem('accessToken')){
             localStorage.setItem('accessToken', JSON.stringify(token));
         }
@@ -152,9 +153,11 @@ export class AuthService
      *
      * @param user
      */
-    signUp(user: { firstName: string; lastName:string; email: string; password: string}): Observable<any>
+    signUp(user: { name: string; lastName:string; emailaddress: string; password: string, username?:string }): Observable<any>
     {
+        debugger;
         user.password = shajs('sha256').update(user.password ).digest('hex');
+        user.username = user.emailaddress.split('@')[0];
         return this._httpClient.post(environment.apiUrl+'/user', user);
     }
 

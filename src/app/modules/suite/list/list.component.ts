@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
-import { Category, Course } from '../suite.types';
+import { Category, Application } from '../suite.types';
 import { SuiteService } from '../suite.services';
 
 @Component({
@@ -15,8 +15,8 @@ import { SuiteService } from '../suite.services';
 export class SuiteListComponent implements OnInit, OnDestroy
 {
     categories: Category[];
-    courses: Course[];
-    filteredCourses: Course[];
+    applications: Application[];
+    filteredApplications: Application[];
     filters: {
         categorySlug$: BehaviorSubject<string>;
         query$: BehaviorSubject<string>;
@@ -61,11 +61,11 @@ export class SuiteListComponent implements OnInit, OnDestroy
             });
 
         // Get the courses
-        this._suiteService.courses$
+        this._suiteService.applications$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((courses: Course[]) => {
-                this.courses = this.filteredCourses = courses;
-
+            .subscribe((applications: Application[]) => {
+                this.applications = this.filteredApplications = applications;
+                console.log(this.applications)
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -75,27 +75,23 @@ export class SuiteListComponent implements OnInit, OnDestroy
             .subscribe(([categorySlug, query, hideCompleted]) => {
 
                 // Reset the filtered courses
-                this.filteredCourses = this.courses;
+                this.filteredApplications = this.applications;
 
                 // Filter by category
                 if ( categorySlug !== 'all' )
                 {
-                    this.filteredCourses = this.filteredCourses.filter(course => course.category === categorySlug);
+                    this.filteredApplications = this.filteredApplications.filter(application => application.category === categorySlug);
                 }
 
                 // Filter by search query
                 if ( query !== '' )
                 {
-                    this.filteredCourses = this.filteredCourses.filter(course => course.title.toLowerCase().includes(query.toLowerCase())
-                        || course.description.toLowerCase().includes(query.toLowerCase())
-                        || course.category.toLowerCase().includes(query.toLowerCase()));
+                    this.filteredApplications = this.filteredApplications.filter(application => application.name.toLowerCase().includes(query.toLowerCase())
+                        || application.description.toLowerCase().includes(query.toLowerCase())
+                        //|| application.category.toLowerCase().includes(query.toLowerCase())
+                        );
                 }
 
-                // Filter by completed
-                if ( hideCompleted )
-                {
-                    this.filteredCourses = this.filteredCourses.filter(course => course.progress.completed === 0);
-                }
             });
     }
 
@@ -152,5 +148,10 @@ export class SuiteListComponent implements OnInit, OnDestroy
     trackByFn(index: number, item: any): any
     {
         return item.id || index;
+    }
+    onNavigate(routeUrl:string ){
+        // your logic here.... like set the url 
+        const url = routeUrl;
+        window.open(url, '_blank');
     }
 }

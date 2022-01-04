@@ -23,7 +23,7 @@
         <!-- Content -->
         <div class="z-10 relative w-full max-w-2xl">
             <div class="text-7xl font-bold leading-none text-gray-100">
-                <div>Beinvenidos a</div>
+                <div>Bienvenidos a</div>
                 <div>nuestra comunidad</div>
             </div>
             <div class="mt-6 text-lg tracking-tight leading-6 text-gray-400">
@@ -80,20 +80,20 @@
             <form
                 class="mt-8"
                 [formGroup]="signUpForm">
-
+          
                 <!-- Name field -->
                 <mat-form-field class="w-full">
                     <mat-label>Primer Nombre</mat-label>
                     <input
-                        id="firstName"
+                        id="name"
                         matInput
-                        [formControlName]="'firstName'">
-                    <mat-error *ngIf="signUpForm.get('firstName').hasError('required')">
+                        [formControlName]="'name'">
+                    <mat-error *ngIf="signUpForm.get('name').hasError('required')">
                         El nombre es requerido
                     </mat-error>
                 </mat-form-field>
 
-                <!-- Name field -->
+                <!-- Last Name field -->
                 <mat-form-field class="w-full">
                     <mat-label>Primer Apellido</mat-label>
                     <input
@@ -111,11 +111,11 @@
                     <input
                         id="email"
                         matInput
-                        [formControlName]="'email'">
-                    <mat-error *ngIf="signUpForm.get('email').hasError('required')">
+                        [formControlName]="'emailaddress'">
+                    <mat-error *ngIf="signUpForm.get('emailaddress').hasError('required')">
                         Email address is required
                     </mat-error>
-                    <mat-error *ngIf="signUpForm.get('email').hasError('email')">
+                    <mat-error *ngIf="signUpForm.get('emailaddress').hasError('emailaddress')">
                         Please enter a valid email address
                     </mat-error>
                 </mat-form-field>

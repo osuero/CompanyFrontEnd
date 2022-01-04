@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, NgForm, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
@@ -44,10 +44,11 @@ export class AuthSignUpComponent implements OnInit
     {
         // Create the form
         this.signUpForm = this._formBuilder.group({
-                firstName : ['', Validators.required],
-                lastName  : ['', Validators.required],
-                email     : ['', [Validators.required, Validators.email]],
-                password  : ['', Validators.required],
+                name        : ['', Validators.required],
+                lastName    : ['', Validators.required],
+                emailaddress: ['', [Validators.required, Validators.email]],
+                password    : ['', Validators.required],
+                username    : [ '' ]
             }
         );
     }

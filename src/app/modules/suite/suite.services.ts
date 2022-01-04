@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
-import { Category, Course } from '../suite/suite.types';
+import { Category, Application } from '../suite/suite.types';
+import { environment } from 'environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -10,8 +11,8 @@ export class SuiteService
 {
     // Private
     private _categories: BehaviorSubject<Category[] | null> = new BehaviorSubject(null);
-    private _course: BehaviorSubject<Course | null> = new BehaviorSubject(null);
-    private _courses: BehaviorSubject<Course[] | null> = new BehaviorSubject(null);
+    private _application: BehaviorSubject<Application | null> = new BehaviorSubject(null);
+    private _applications: BehaviorSubject<Application[] | null> = new BehaviorSubject(null);
 
     /**
      * Constructor
@@ -35,17 +36,17 @@ export class SuiteService
     /**
      * Getter for courses
      */
-    get courses$(): Observable<Course[]>
+    get applications$(): Observable<Application[]>
     {
-        return this._courses.asObservable();
+        return this._applications.asObservable();
     }
 
     /**
      * Getter for course
      */
-    get course$(): Observable<Course>
+    get application$(): Observable<Application>
     {
-        return this._course.asObservable();
+        return this._application.asObservable();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -67,11 +68,20 @@ export class SuiteService
     /**
      * Get courses
      */
-    getCourses(): Observable<Course[]>
+    /*getApplications(): Observable<Application[]>
     {
-        return this._httpClient.get<Course[]>('api/apps/academy/courses').pipe(
+        return this._httpClient.get<Application[]>('api/apps/academy/courses').pipe(
             tap((response: any) => {
-                this._courses.next(response);
+                this._applications.next(response);
+            })
+        );
+    }
+*/
+    getApplications(): Observable<Application[]>
+    {
+        return this._httpClient.get<Application[]>(environment.apiUrl+'/applications').pipe(
+            tap((response: any) => {
+                this._applications.next(response);
             })
         );
     }
@@ -79,13 +89,13 @@ export class SuiteService
     /**
      * Get course by id
      */
-    getCourseById(id: string): Observable<Course>
+    getApplicationById(id: string): Observable<Application>
     {
-        return this._httpClient.get<Course>('api/apps/academy/courses/course', {params: {id}}).pipe(
+        return this._httpClient.get<Application>('api/apps/academy/courses/course', {params: {id}}).pipe(
             map((course) => {
 
                 // Update the course
-                this._course.next(course);
+                this._application.next(course);
 
                 // Return the course
                 return course;

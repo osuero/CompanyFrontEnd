@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Category, Course } from '../suite/suite.types';
+import { Category, Application } from '../suite/suite.types';
 import { SuiteService } from './suite.services';
 
 @Injectable({
@@ -54,9 +54,9 @@ export class SuiteCoursesResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Course[]>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Application[]>
     {
-        return this._suiteService.getCourses();
+        return this._suiteService.getApplications();
     }
 }
 
@@ -85,9 +85,9 @@ export class SuiteCourseResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Course>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Application>
     {
-        return this._suiteService.getCourseById(route.paramMap.get('id'))
+        return this._suiteService.getApplicationById(route.paramMap.get('id'))
                    .pipe(
                        // Error here means the requested task is not available
                        catchError((error) => {
