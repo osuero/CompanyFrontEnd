@@ -4,7 +4,9 @@
 
 export const environment = {
     production: false,
-    apiUrl:'https://localhost:5001'///octavio cologar la ruta del API
+    //apiUrl:'http://172.20.18.5:8086'///octavio cologar la ruta del API
+
+    apiUrl:'https://localhost:5001'
 };
 
 /*

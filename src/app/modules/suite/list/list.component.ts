@@ -5,6 +5,8 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { Category, Application } from '../suite.types';
 import { SuiteService } from '../suite.services';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
+
 
 @Component({
     selector       : 'suite-list',
@@ -36,7 +38,8 @@ export class SuiteListComponent implements OnInit, OnDestroy
         private _activatedRoute: ActivatedRoute,
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
-        private _suiteService: SuiteService
+        private _suiteService: SuiteService,
+        private _http: HttpClient
     )
     {
     }
@@ -65,8 +68,7 @@ export class SuiteListComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((applications: Application[]) => {
                 this.applications = this.filteredApplications = applications;
-                console.log(this.applications)
-                // Mark for check
+
                 this._changeDetectorRef.markForCheck();
             });
 
@@ -150,8 +152,21 @@ export class SuiteListComponent implements OnInit, OnDestroy
         return item.id || index;
     }
     onNavigate(routeUrl:string ){
+       debugger
+        const dataToPut = 'Usually, it will be an object, not a string';
+        console.log(localStorage.getItem("accessToken"))
+        console.log('entro al redirect')
+        const headers = new HttpHeaders()
+        
+            .append("Authorization", "Bearer " + localStorage.getItem("accessToken"))
+            .append("Content-type", "application/json");
         // your logic here.... like set the url 
-        const url = routeUrl;
+        const httpOptions = {
+            headers
+          };
+        const url = 'https://index.gob.do/';
+
+        this._http.post(routeUrl,dataToPut, httpOptions)
         window.open(url, '_blank');
     }
 }
